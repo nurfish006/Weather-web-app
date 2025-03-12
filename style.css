@@ -147,4 +147,24 @@ body::before{
     align-items: center;
     padding: 10px;
     border-radius: 12px;
+    transition: 0.3s background;
+}
+.forecast-item:hover{
+    background: rgba(255,255, 255, 0.15);
+}
+.forecast-item-icon{
+    width: 35px;
+    height: 35px;
+}
+.section-message{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+}
+.search-img{
+    height: 180px;
+    width: fit-content;
 }
