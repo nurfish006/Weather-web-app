@@ -16,7 +16,7 @@ const forecastItemContainer = document.querySelector('.forecast-items-container'
 // Event Listeners
 searchBtn.addEventListener('click', () => {
     if (cityInput.value.trim() !== '') {
-        updateWeatherInfo(cityInput.value);
+        updateWeatherInfo(cityInput.value); // Fetch weather for the searched city
         cityInput.value = '';
         cityInput.blur();
     }
@@ -24,16 +24,25 @@ searchBtn.addEventListener('click', () => {
 
 cityInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && cityInput.value.trim() !== '') {
-        updateWeatherInfo(cityInput.value);
+        updateWeatherInfo(cityInput.value); // Fetch weather for the searched city
         cityInput.value = '';
         cityInput.blur();
     }
 });
 
 // Fetch Data from API
-async function getFetchData(endPoint, city) {
+async function getFetchData(endPoint, query, isCoordinates = false) {
     try {
-        const apiUri = `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&appid=${apiKey}&units=metric`;
+        let apiUri;
+        if (isCoordinates) {
+            // Fetch data using latitude and longitude
+            const { latitude, longitude } = query;
+            apiUri = `https://api.openweathermap.org/data/2.5/${endPoint}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+        } else {
+            // Fetch data using city name
+            apiUri = `https://api.openweathermap.org/data/2.5/${endPoint}?q=${query}&appid=${apiKey}&units=metric`;
+        }
+
         const response = await fetch(apiUri);
 
         // Handle 404 responses without throwing an error
@@ -74,8 +83,8 @@ function getCurrentDate() {
 }
 
 // Update Forecast Info
-async function updateForecastInfo(city) {
-    const forecastData = await getFetchData('forecast', city); // Fetch forecast data
+async function updateForecastInfo(query, isCoordinates = false) {
+    const forecastData = await getFetchData('forecast', query, isCoordinates); // Fetch forecast data
     console.log('Forecast API Response:', forecastData); // Debugging line
 
     if (!forecastData || forecastData.cod === "404") {
@@ -106,8 +115,8 @@ async function updateForecastInfo(city) {
 }
 
 // Update Weather Info
-async function updateWeatherInfo(city) {
-    const weatherData = await getFetchData('weather', city);
+async function updateWeatherInfo(query, isCoordinates = false) {
+    const weatherData = await getFetchData('weather', query, isCoordinates);
     console.log('API Response:', weatherData); // Debugging line
 
     // Check if the city was not found or if there was an error
@@ -134,7 +143,7 @@ async function updateWeatherInfo(city) {
     weatherSummeryImg.src = `./assets/weather/${getWeatherIcon(id)}`;
 
     // Update the forecast info
-    await updateForecastInfo(city); // Call the forecast function
+    await updateForecastInfo(query, isCoordinates); // Call the forecast function
     showDisplaySection(weatherInfoSection); // Show the weather info section
 }
 
@@ -146,3 +155,39 @@ function showDisplaySection(section) {
     section.style.display = 'flex'; // Show the requested section
     console.log('Showing section:', section); // Debugging line
 }
+
+// Get User Location
+function getUserLocation() {
+    return new Promise((resolve, reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    resolve({ latitude, longitude });
+                },
+                (error) => {
+                    console.error('Error getting user location:', error);
+                    reject(error);
+                }
+            );
+        } else {
+            reject(new Error('Geolocation is not supported by this browser.'));
+        }
+    });
+}
+
+// Load Weather for User's Location on App Start
+async function loadUserLocationWeather() {
+    try {
+        const userLocation = await getUserLocation(); // Get user's location
+        await updateWeatherInfo(userLocation, true); // Fetch weather data using coordinates
+    } catch (error) {
+        console.error('Error loading user location weather:', error);
+        showDisplaySection(searchCitySection); // Fallback to the "Search City" section
+    }
+}
+
+// Call this function when the app loads
+window.addEventListener('load', () => {
+    loadUserLocationWeather();
+});
