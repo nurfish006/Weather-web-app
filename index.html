@@ -15,6 +15,8 @@
                 <span class="material-symbols-outlined">search</span>
             </button>
         </div>
+
+        <!-- Weather Info Section -->
         <section class="weather-info" style="display: none;">
             <div class="location-date-container">
                 <div class="location">
@@ -47,31 +49,11 @@
                 </div>
             </div>
             <div class="forecast-items-container">
-                <div class="forecast-item">
-                    <h5 class="forecast-item-date regular-txt">06 aug </h5>
-                        <img src="assets/weather/thunderstorm.svg" alt="" class="forecast-item-icon" >
-                     <h5 class="forecast-item-temp">29 °C</h5>
-                </div>
-                <div class="forecast-item">
-                    <h5 class="forecast-item-date regular-txt">06 aug </h5>
-                        <img src="assets/weather/thunderstorm.svg" alt="" class="forecast-item-icon" >
-                     <h5 class="forecast-item-temp">29 °C</h5>
-                </div>
-                <div class="forecast-item">
-                    <h5 class="forecast-item-date regular-txt">06 aug </h5>
-                        <img src="assets/weather/thunderstorm.svg" alt="" class="forecast-item-icon" >
-                     <h5 class="forecast-item-temp">29 °C</h5>
-                </div>
-                <div class="forecast-item">
-                    <h5 class="forecast-item-date regular-txt">06 aug </h5>
-                        <img src="assets/weather/thunderstorm.svg" alt="" class="forecast-item-icon" >
-                     <h5 class="forecast-item-temp">29 °C</h5>
-                </div>
+                <!-- Forecast items will be dynamically inserted here -->
             </div>
-           
-
-
         </section>
+
+        <!-- Search City Message -->
         <section class="search-city section-message">
             <img src="assets/message/search-city.png" alt="" class="search-img">
             <div class="l">
@@ -81,18 +63,20 @@
                 </h4>
             </div>
         </section>
+          <!-- City Not Found Message -->
+    <section class="not-found section-message" style="display: none;">
+        <img src="assets/message/not-found.png" alt="" class="search-img">
+        <div class="l">
+            <h1>City Not Found</h1>
+            <h4 class="regular-txt">
+                The city you searched for could not be found.
+            </h4>
+        </div>
+    </section>
     </section>
 
-    <section class="not-found section-message " style="display: none;">
-            <img src="assets/message/not-found.png" alt="" class="search-img">
-            <div class="l">
-                <h1>Search City</h1>
-                <h4 class="regular-txt">
-                    Find the weather of your city
-                </h4>
-            </div>
+  
 
-        </section>
     <script src="index.js" defer></script>
 </body>
 </html>
